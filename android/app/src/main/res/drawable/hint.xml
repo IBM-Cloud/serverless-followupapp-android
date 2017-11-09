@@ -1,0 +1,79 @@
+<!--
+  ~ Copyright 2016, 2017 IBM Corp.
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="30dp"
+        android:height="30dp"
+        android:viewportWidth="30.0"
+        android:viewportHeight="30.0">
+    <path
+        android:pathData="M0,14.99a14.982,14.99 0,1 0,29.964 0a14.982,14.99 0,1 0,-29.964 0z"
+        android:strokeColor="#00000000"
+        android:fillColor="#734098"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M14.886,10.217C12.474,10.217 10.518,12.182 10.518,14.606C10.518,15.479 10.772,16.292 11.209,16.975L13.132,20.533L16.794,20.533L18.562,16.975C19,16.292 19.253,15.479 19.253,14.606C19.253,12.182 17.298,10.217 14.886,10.217L14.886,10.217ZM14.886,10.752C17.001,10.752 18.721,12.481 18.721,14.606C18.721,15.347 18.511,16.066 18.115,16.686L18.099,16.71L18.086,16.736L16.465,19.998L13.448,19.998L11.677,16.72L11.668,16.703L11.657,16.686C11.26,16.066 11.051,15.346 11.051,14.606C11.051,12.481 12.771,10.752 14.886,10.752L14.886,10.752Z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M12.762,14.285L12.229,14.285C12.229,12.99 13.278,11.936 14.566,11.936L14.566,12.471C13.571,12.471 12.762,13.285 12.762,14.285"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M13.132,21.518l3.677,0l0,-0.676l-3.677,0z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M13.132,22.503l3.677,0l0,-0.676l-3.677,0z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M13.132,23.488l3.677,0l0,-0.676l-3.677,0z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M13.893,24.48l2.154,0l0,-0.676l-2.154,0z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M15.207,7.961L15.207,5.178C15.1,5.174 14.993,5.172 14.886,5.172C14.779,5.172 14.672,5.174 14.565,5.178L14.565,7.961L15.207,7.961Z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M19.951,10.16L21.863,8.238C21.719,8.079 21.569,7.926 21.415,7.776L19.497,9.704L19.951,10.16Z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M21.202,15.116L23.777,15.116C23.786,14.947 23.79,14.777 23.79,14.606C23.79,14.561 23.789,14.516 23.788,14.471L21.202,14.471L21.202,15.116Z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M8.57,14.471L5.984,14.471C5.983,14.516 5.982,14.561 5.982,14.606C5.982,14.777 5.986,14.947 5.995,15.116L8.57,15.116L8.57,14.471Z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M10.275,9.704L8.356,7.776C8.202,7.926 8.053,8.079 7.908,8.238L9.821,10.16L10.275,9.704Z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+</vector>

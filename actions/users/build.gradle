@@ -1,0 +1,7 @@
+apply from: '../common.gradle'
+
+version = '1.0'
+
+dependencies {
+  provided 'com.google.code.gson:gson:2.6.2'
+}

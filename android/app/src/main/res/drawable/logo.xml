@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright 2016, 2017 IBM Corp.
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="80dp"
+        android:height="79dp"
+        android:viewportWidth="80.0"
+        android:viewportHeight="79.0">
+    <path
+        android:pathData="M0.77,39.31a39.23,39.18 0,1 0,78.46 0a39.23,39.18 0,1 0,-78.46 0z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M40.67,12.46C46.18,12.46 50.65,16.93 50.65,22.44C50.65,27.95 46.18,32.42 40.67,32.42C35.16,32.42 30.69,27.95 30.69,22.44C30.69,16.93 35.16,12.46 40.67,12.46"
+        android:strokeColor="#00000000"
+        android:fillColor="#AAF3E8"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M61.1,46.95C61.1,36.24 52.59,27.87 42.01,27.87C31.43,27.87 22.99,36.24 22.99,46.95L61.1,46.95Z"
+        android:strokeColor="#00000000"
+        android:fillColor="#AAF3E8"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M37.99,12.46C43.5,12.46 47.97,16.93 47.97,22.44C47.97,27.95 43.5,32.42 37.99,32.42C32.48,32.42 28.01,27.95 28.01,22.44C28.01,16.93 32.48,12.46 37.99,12.46"
+        android:strokeColor="#00000000"
+        android:fillColor="#00B4A0"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M57.01,46.95C57.01,36.24 48.51,27.87 37.99,27.87C27.47,27.87 18.9,36.24 18.9,46.95L57.01,46.95Z"
+        android:strokeColor="#00000000"
+        android:fillColor="#00B4A0"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M47.17,26.26C54.27,26.26 60.03,32.02 60.03,39.12C60.03,46.22 54.27,51.98 47.17,51.98C40.06,51.98 34.31,46.22 34.31,39.12C34.31,32.02 40.06,26.26 47.17,26.26"
+        android:strokeColor="#00000000"
+        android:fillColor="#5AAAFA"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M47.17,26.26C54.27,26.26 60.03,32.02 60.03,39.12C60.03,46.22 54.27,51.98 47.17,51.98C40.06,51.98 34.31,46.22 34.31,39.12C34.31,32.02 40.06,26.26 47.17,26.26Z"
+        android:strokeColor="#FFFFFF"
+        android:fillColor="#00000000"
+        android:strokeWidth="1"/>
+    <path
+        android:pathData="M44.76,41.73l-3.82,-3.88l-1.67,1.67l5.49,5.56l10.32,-10.25l-1.67,-1.67z"
+        android:strokeColor="#00000000"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+</vector>

@@ -1,0 +1,24 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+configurations {
+  provided
+  compile.extendsFrom provided
+}
+
+// build a jar with all dependencies
+jar {
+  dependsOn configurations.runtime
+  from {
+    (configurations.runtime - configurations.provided).collect {
+      it.isDirectory() ? it : zipTree(it)
+    }
+  }
+  archiveName = project.name + '.jar'
+}
