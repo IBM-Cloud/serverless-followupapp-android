@@ -1,7 +1,8 @@
-package serverless.followup.users;
+package serverlessfollowup.complaints;
 
 import com.google.gson.JsonObject;
-public class Hello {
+
+public class AddComplaint {
     public static JsonObject main(JsonObject args) {
         String name = "stranger";
         if (args.has("name"))

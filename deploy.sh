@@ -40,27 +40,47 @@ function install() {
     -p services.ta.password $TONE_ANALYZER_PASSWORD\
 
   echo "Creating actions"
-  bx wsk action create $PACKAGE_NAME/validate-token \
+  bx wsk action create $PACKAGE_NAME/auth-validate \
     actions/validate/build/libs/validate.jar \
-    --main serverless.followup.auth.Hello \
+    --main serverlessfollowup.auth.ValidateToken \
     --annotation final true
 
-  bx wsk action create $PACKAGE_NAME/users-register \
+  bx wsk action create $PACKAGE_NAME/users-add \
     actions/users/build/libs/users.jar \
-    --main serverless.followup.users.Hello \
+    --main serverlessfollowup.users.AddUser \
     --annotation final true
 
   bx wsk action create $PACKAGE_NAME/complaints-put \
     actions/complaints/build/libs/complaints.jar \
-    --main serverless.followup.complaints.Hello \
+    --main serverlessfollowup.complaints.AddComplaint \
+    --annotation final true
+
+  bx wsk action create $PACKAGE_NAME/complaints-analyze \
+    actions/complaints/build/libs/complaints.jar \
+    --main serverlessfollowup.complaints.AnalyzeComplaint \
+    --annotation final true
+
+  bx wsk action create $PACKAGE_NAME/users-add-sequence \
+    $PACKAGE_NAME/auth-validate,$PACKAGE_NAME/users-add \
+    --sequence \
+    --web true \
+    --annotation final true
+
+  bx wsk action create $PACKAGE_NAME/complaints-put-sequence \
+    $PACKAGE_NAME/auth-validate,$PACKAGE_NAME/complaints-put \
+    --sequence \
+    --web true \
     --annotation final true
 }
 
 function uninstall() {
   echo "Removing actions..."
-  bx wsk action delete $PACKAGE_NAME/validate-token
-  bx wsk action delete $PACKAGE_NAME/users-register
+  bx wsk action delete $PACKAGE_NAME/users-add-sequence
+  bx wsk action delete $PACKAGE_NAME/complaints-put-sequence
+  bx wsk action delete $PACKAGE_NAME/auth-validate
+  bx wsk action delete $PACKAGE_NAME/users-add
   bx wsk action delete $PACKAGE_NAME/complaints-put
+  bx wsk action delete $PACKAGE_NAME/complaints-analyze
 
   echo "Removing package..."
   bx wsk package delete $PACKAGE_NAME
@@ -71,9 +91,9 @@ function uninstall() {
 
 function update() {
   echo "Updating actions..."
-  wsk action update $PACKAGE_NAME/validate-token    actions/validate/build/libs/validate.jar
-  wsk action update $PACKAGE_NAME/users-register    actions/users/build/libs/users.jar
-  wsk action update $PACKAGE_NAME/complaints-put    actions/complaints/build/libs/complaints.jar
+  wsk action update $PACKAGE_NAME/auth-validate    actions/validate/build/libs/validate.jar
+  wsk action update $PACKAGE_NAME/users-add        actions/users/build/libs/users.jar
+  wsk action update $PACKAGE_NAME/complaints-put   actions/complaints/build/libs/complaints.jar
 }
 
 function showenv() {
