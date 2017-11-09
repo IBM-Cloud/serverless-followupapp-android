@@ -91,9 +91,21 @@ function uninstall() {
 
 function update() {
   echo "Updating actions..."
-  wsk action update $PACKAGE_NAME/auth-validate    actions/validate/build/libs/validate.jar
-  wsk action update $PACKAGE_NAME/users-add        actions/users/build/libs/users.jar
-  wsk action update $PACKAGE_NAME/complaints-put   actions/complaints/build/libs/complaints.jar
+  bx wsk action update $PACKAGE_NAME/auth-validate \
+    actions/validate/build/libs/validate.jar \
+    --main serverlessfollowup.auth.ValidateToken
+
+  bx wsk action update $PACKAGE_NAME/users-add \
+    actions/users/build/libs/users.jar \
+    --main serverlessfollowup.users.AddUser
+
+  bx wsk action update $PACKAGE_NAME/complaints-put \
+    actions/complaints/build/libs/complaints.jar \
+    --main serverlessfollowup.complaints.AddComplaint
+
+  bx wsk action update $PACKAGE_NAME/complaints-analyze \
+    actions/complaints/build/libs/complaints.jar \
+    --main serverlessfollowup.complaints.AnalyzeComplaint
 }
 
 function showenv() {
