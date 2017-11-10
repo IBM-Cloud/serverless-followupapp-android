@@ -10,16 +10,26 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import java.text.DateFormat;
 import java.util.Base64;
+import java.util.Locale;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.impl.FixedClock;
 
 public class ValidateToken {
+
+  private static JsonParser gsonParser = new JsonParser();
+  private static Gson gson = new Gson();
 
   static JwtParser makeParser(String algo, String modulus, String exponent) {
     if (!"RSA".equals(algo)) {
@@ -41,7 +51,7 @@ public class ValidateToken {
     }
   }
 
-  public static JsonObject main(JsonObject args) {
+  public static JsonObject main(JsonObject args) throws Exception {
 
 
     // we expect the Authorization header to be set
@@ -73,7 +83,6 @@ public class ValidateToken {
       URL publickeyUrl = new URL(args.getAsJsonPrimitive("services.appid.url").getAsString() + "/publickey");
       HttpURLConnection connection = (HttpURLConnection) publickeyUrl.openConnection();
 
-      JsonParser gsonParser = new JsonParser();
       publicKey = (JsonObject) gsonParser.parse(new BufferedReader(new InputStreamReader(connection.getInputStream())));
     } catch (Exception e) {
       throw new IllegalArgumentException("Could not retrieve public key", e);
@@ -85,10 +94,20 @@ public class ValidateToken {
     System.out.println("Public key is " + algo + ", " + modulus + ", " + exponent);
 
     JwtParser parser = makeParser(algo, modulus, exponent);
+    Jwt<?, Claims> parsedAccessToken;
+    Jwt<?, Claims> parsedIdToken;
     try {
-      parser.parse(accessToken);
+      parsedAccessToken = parser.parse(accessToken);
+      parsedIdToken = idToken == null ? null : parser.parse(idToken);
     } catch (Exception e) {
       throw new IllegalArgumentException("Invalid token", e);
+    }
+
+    // inject decoded versions of the token in the message so next action does
+    // not need to do this
+    args.add("_accessToken", gson.toJsonTree(parsedAccessToken.getBody()));
+    if (parsedIdToken != null) {
+      args.add("_idToken", gson.toJsonTree(parsedIdToken.getBody()));
     }
 
     // valid token detected, let it pass
