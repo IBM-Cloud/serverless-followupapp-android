@@ -6,4 +6,5 @@ dependencies {
   provided 'com.google.code.gson:gson:2.6.2'
   
   compile group: 'com.cloudant', name: 'cloudant-client', version: '2.10.0'
+  compile 'com.ibm.watson.developer_cloud:tone-analyzer:4.0.0'
 }
