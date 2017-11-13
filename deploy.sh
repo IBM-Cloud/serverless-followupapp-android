@@ -29,7 +29,7 @@ function install() {
   curl -s -X PUT $CLOUDANT_URL/complaints | grep -v file_exists
   curl -s -X PUT $CLOUDANT_URL/moods | grep -v file_exists
 
-  echo "Creating $PACKAGE_NAME package"
+  echo "Creating packages..."
   bx wsk package create $PACKAGE_NAME\
     -p services.cloudant.url $CLOUDANT_URL\
     -p services.appid.url $APPID_URL\
@@ -39,7 +39,13 @@ function install() {
     -p services.ta.username $TONE_ANALYZER_USERNAME\
     -p services.ta.password $TONE_ANALYZER_PASSWORD\
 
-  echo "Creating actions"
+  bx wsk package bind /whisk.system/cloudant \
+    $PACKAGE_NAME-cloudant \
+    -p username $CLOUDANT_USERNAME \
+    -p password $CLOUDANT_PASSWORD \
+    -p host $CLOUDANT_HOST
+
+  echo "Creating actions..."
   bx wsk action create $PACKAGE_NAME/auth-validate \
     actions/validate/build/libs/validate.jar \
     --main serverlessfollowup.auth.ValidateToken \
@@ -48,6 +54,11 @@ function install() {
   bx wsk action create $PACKAGE_NAME/users-add \
     actions/users/build/libs/users.jar \
     --main serverlessfollowup.users.AddUser \
+    --annotation final true
+
+  bx wsk action create $PACKAGE_NAME/users-notify \
+    actions/users/build/libs/users.jar \
+    --main serverlessfollowup.users.NotifyUser \
     --annotation final true
 
   bx wsk action create $PACKAGE_NAME/complaints-put \
@@ -60,29 +71,47 @@ function install() {
     --main serverlessfollowup.complaints.AnalyzeComplaint \
     --annotation final true
 
+  echo "Creating sequences..."
   bx wsk action create $PACKAGE_NAME/users-add-sequence \
     $PACKAGE_NAME/auth-validate,$PACKAGE_NAME/users-add \
     --sequence \
-    --web true \
-    --annotation final true
+    --web true
 
   bx wsk action create $PACKAGE_NAME/complaints-put-sequence \
     $PACKAGE_NAME/auth-validate,$PACKAGE_NAME/complaints-put \
     --sequence \
-    --web true \
-    --annotation final true
+    --web true
+
+  # sequence reading the document from cloudant changes then calling analyze complaint on it
+  bx wsk action create $PACKAGE_NAME/complaints-analyze-sequence \
+    $PACKAGE_NAME-cloudant/read-document,$PACKAGE_NAME/complaints-analyze,$PACKAGE_NAME/users-notify \
+    --sequence
+
+  echo "Creating triggers..."
+  bx wsk trigger create complaints-analyze-trigger --feed $PACKAGE_NAME-cloudant/changes \
+    -p dbname complaints
+  bx wsk rule create complaints-analyze-rule complaints-analyze-trigger $PACKAGE_NAME/complaints-analyze-sequence
 }
 
 function uninstall() {
-  echo "Removing actions..."
+  echo "Removing triggers..."
+  bx wsk rule delete complaints-analyze-rule
+  bx wsk trigger delete complaints-analyze-trigger
+
+  echo "Removing sequence..."
   bx wsk action delete $PACKAGE_NAME/users-add-sequence
   bx wsk action delete $PACKAGE_NAME/complaints-put-sequence
+  bx wsk action delete $PACKAGE_NAME/complaints-analyze-sequence
+
+  echo "Removing actions..."
   bx wsk action delete $PACKAGE_NAME/auth-validate
   bx wsk action delete $PACKAGE_NAME/users-add
+  bx wsk action delete $PACKAGE_NAME/users-notify
   bx wsk action delete $PACKAGE_NAME/complaints-put
   bx wsk action delete $PACKAGE_NAME/complaints-analyze
 
-  echo "Removing package..."
+  echo "Removing packages..."
+  bx wsk package delete $PACKAGE_NAME-cloudant
   bx wsk package delete $PACKAGE_NAME
 
   echo "Done"
