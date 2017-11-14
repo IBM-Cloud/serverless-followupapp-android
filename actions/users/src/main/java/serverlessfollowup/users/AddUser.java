@@ -18,7 +18,8 @@ public class AddUser {
     // read the tokens
     JsonObject accessToken = (JsonObject) args.get("_accessToken");
     JsonObject idToken = (JsonObject) args.get("_idToken");
-
+    String deviceId = args.getAsJsonPrimitive("deviceId").getAsString();
+    
     // if one is missing, return error
     if (accessToken == null) {
       throw new IllegalArgumentException("Missing access token");
@@ -28,6 +29,10 @@ public class AddUser {
       throw new IllegalArgumentException("Missing id token");
     }
 
+    if (deviceId == null) {
+      throw new IllegalArgumentException("Missing deviceId");
+    }
+    
     // extract the subject
     String subject = accessToken.getAsJsonPrimitive("sub").getAsString();
 
@@ -45,11 +50,17 @@ public class AddUser {
       // if not found, create a new user then return the user
       System.out.println("No existing user found, creating a new one");
 
+      boolean isAnon = "appid_anon".equals(idToken.getAsJsonArray("amr").get(0).getAsString());
+      System.out.println("This is an anonymous user");
+      
       Map<String, Object> newUser = new LinkedHashMap<String, Object>();
       newUser.put("subject", subject);
-      newUser.put("name", idToken.getAsJsonPrimitive("name").getAsString());
-      newUser.put("email", idToken.getAsJsonPrimitive("email").getAsString());
-      newUser.put("picture", idToken.getAsJsonPrimitive("picture").getAsString());
+      newUser.put("deviceId", deviceId);
+      if (!isAnon) {
+        newUser.put("name", idToken.getAsJsonPrimitive("name").getAsString());
+        newUser.put("email", idToken.getAsJsonPrimitive("email").getAsString());
+        newUser.put("picture", idToken.getAsJsonPrimitive("picture").getAsString());
+      }
       newUser.put("accessToken", accessToken);
       newUser.put("idToken", idToken);
 
