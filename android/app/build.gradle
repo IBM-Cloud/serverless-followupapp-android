@@ -25,6 +25,8 @@ dependencies {
     compile 'com.github.ibm-cloud-security:appid-clientsdk-android:1.+'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.github.vlonjatg:progress-activity:v2.0.3'
+
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.1.0'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'

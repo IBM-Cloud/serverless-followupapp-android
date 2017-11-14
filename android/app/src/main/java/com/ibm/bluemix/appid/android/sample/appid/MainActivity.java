@@ -20,8 +20,12 @@ import android.view.View;
 
 import com.ibm.bluemix.appid.android.api.AppID;
 import com.ibm.bluemix.appid.android.api.AppIDAuthorizationManager;
+import com.ibm.bluemix.appid.android.api.AuthorizationException;
 import com.ibm.bluemix.appid.android.api.LoginWidget;
+import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
+import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
+import com.vlonjatg.progressactivity.ProgressRelativeLayout;
 
 /**
  * This is the App front page activity.
@@ -32,7 +36,7 @@ import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
  * In both cases App Id generates and returns Access and Identity tokens. The Identity token provides information
  * about the user which could come from the Identity Provider (e.g. facebook, google...) and the access token can be used
  * to access the profile attributes.
- *
+ * <p>
  * This sample also demonstrates how a token can be stored on the device and reused when coming back to the app.
  */
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private AppID appId;
     private AppIDAuthorizationManager appIDAuthorizationManager;
     private TokensPersistenceManager tokensPersistenceManager;
+    private ProgressRelativeLayout progressActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,39 +61,71 @@ public class MainActivity extends AppCompatActivity {
 
         this.appIDAuthorizationManager = new AppIDAuthorizationManager(this.appId);
         tokensPersistenceManager = new TokensPersistenceManager(this, appIDAuthorizationManager);
+
+        progressActivity = (ProgressRelativeLayout) findViewById(R.id.activity_main);
+        progressActivity.showContent();
     }
 
     /**
      * Continue as guest action
+     *
      * @param v
      */
-    public void onAnonymousClick (View v) {
-        Log.d(logTag("onAnonymousClick"),"Attempting anonymous authorization");
+    public void onAnonymousClick(View v) {
+        progressActivity.showLoading();
+
+        Log.d(logTag("onAnonymousClick"), "Attempting anonymous authorization");
 
         final String storedAccessToken = tokensPersistenceManager.getStoredAnonymousAccessToken();
         AppIdSampleAuthorizationListener appIdSampleAuthorizationListener =
-                new AppIdSampleAuthorizationListener(this, appIDAuthorizationManager, true);
+                new AppIdSampleAuthorizationListener(this, appIDAuthorizationManager, true) {
+                    @Override
+                    public void onAuthorizationFailure(AuthorizationException exception) {
+                        super.onAuthorizationFailure(exception);
+                        progressActivity.showContent();
+                    }
 
+                    @Override
+                    public void onAuthorizationCanceled() {
+                        super.onAuthorizationCanceled();
+                        progressActivity.showContent();
+                    }
+                };
         appId.loginAnonymously(getApplicationContext(), storedAccessToken, appIdSampleAuthorizationListener);
     }
 
     /**
      * Log in with identity provider authentication action
+     *
      * @param v
      */
     public void onLoginClick(View v) {
-        Log.d(logTag("onLoginClick"),"Attempting identified authorization");
+        progressActivity.showLoading();
+
+        Log.d(logTag("onLoginClick"), "Attempting identified authorization");
         LoginWidget loginWidget = appId.getLoginWidget();
         final String storedAccessToken;
         storedAccessToken = tokensPersistenceManager.getStoredAccessToken();
 
         AppIdSampleAuthorizationListener appIdSampleAuthorizationListener =
-                new AppIdSampleAuthorizationListener(this, appIDAuthorizationManager, false);
+                new AppIdSampleAuthorizationListener(this, appIDAuthorizationManager, false) {
+                    @Override
+                    public void onAuthorizationFailure(AuthorizationException exception) {
+                        super.onAuthorizationFailure(exception);
+                        progressActivity.showContent();
+                    }
+
+                    @Override
+                    public void onAuthorizationCanceled() {
+                        super.onAuthorizationCanceled();
+                        progressActivity.showContent();
+                    }
+                };
 
         loginWidget.launch(this, appIdSampleAuthorizationListener, storedAccessToken);
     }
 
-    private String logTag(String methodName){
+    private String logTag(String methodName) {
         return getClass().getCanonicalName() + "." + methodName;
     }
 }
