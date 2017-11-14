@@ -128,6 +128,10 @@ function update() {
     actions/users/build/libs/users.jar \
     --main serverlessfollowup.users.AddUser
 
+  bx wsk action update $PACKAGE_NAME/users-notify \
+    actions/users/build/libs/users.jar \
+    --main serverlessfollowup.users.NotifyUser
+
   bx wsk action update $PACKAGE_NAME/complaints-put \
     actions/complaints/build/libs/complaints.jar \
     --main serverlessfollowup.complaints.AddComplaint

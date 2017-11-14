@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ServerlessAPI.initialize(getString(R.string.serverlessBackendUrl));
+
         appId = AppID.getInstance();
 
         appId.initialize(this, getResources().getString(R.string.authTenantId), region);

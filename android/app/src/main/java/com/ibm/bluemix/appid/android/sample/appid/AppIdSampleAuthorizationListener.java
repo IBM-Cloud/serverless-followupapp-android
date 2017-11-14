@@ -27,14 +27,12 @@ import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
  * authorization process when using the {@link com.ibm.bluemix.appid.android.api.AppID} login APIs
  */
 public class AppIdSampleAuthorizationListener implements AuthorizationListener {
-    private NoticeHelper noticeHelper;
     private TokensPersistenceManager tokensPersistenceManager;
     private boolean isAnonymous;
     private Activity activity;
 
     public AppIdSampleAuthorizationListener(Activity activity, AppIDAuthorizationManager authorizationManager, boolean isAnonymous) {
         tokensPersistenceManager = new TokensPersistenceManager(activity, authorizationManager);
-        noticeHelper = new NoticeHelper(activity, authorizationManager, tokensPersistenceManager);
         this.isAnonymous = isAnonymous;
         this.activity = activity;
     }
@@ -54,9 +52,16 @@ public class AppIdSampleAuthorizationListener implements AuthorizationListener {
         Log.i(logTag("onAuthorizationCanceled"),"Authorization succeeded");
 
         Intent intent = new Intent(activity, AfterLoginActivity.class);
-        intent.putExtra("auth-state", noticeHelper.determineAuthState(isAnonymous));
         //storing the new token
         tokensPersistenceManager.persistTokensOnDevice();
+
+        //register the user with the backend
+        try {
+            ServerlessAPI.instance().register(accessToken, identityToken, "DEVICE_ID");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         activity.startActivity(intent);
         activity.finish();
     }
