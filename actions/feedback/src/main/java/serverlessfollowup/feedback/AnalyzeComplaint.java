@@ -1,4 +1,4 @@
-package serverlessfollowup.complaints;
+package serverlessfollowup.feedback;
 
 import java.net.URL;
 import java.util.Map;

@@ -26,7 +26,7 @@ function install() {
   echo "Creating database..."
   # ignore "database already exists error"
   curl -s -X PUT $CLOUDANT_URL/users | grep -v file_exists
-  curl -s -X PUT $CLOUDANT_URL/complaints | grep -v file_exists
+  curl -s -X PUT $CLOUDANT_URL/feedback | grep -v file_exists
   curl -s -X PUT $CLOUDANT_URL/moods | grep -v file_exists
 
   echo "Creating packages..."
@@ -61,14 +61,14 @@ function install() {
     --main serverlessfollowup.users.NotifyUser \
     --annotation final true
 
-  bx wsk action create $PACKAGE_NAME/complaints-put \
-    actions/complaints/build/libs/complaints.jar \
-    --main serverlessfollowup.complaints.AddComplaint \
+  bx wsk action create $PACKAGE_NAME/feedback-put \
+    actions/feedback/build/libs/feedback.jar \
+    --main serverlessfollowup.feedback.AddComplaint \
     --annotation final true
 
-  bx wsk action create $PACKAGE_NAME/complaints-analyze \
-    actions/complaints/build/libs/complaints.jar \
-    --main serverlessfollowup.complaints.AnalyzeComplaint \
+  bx wsk action create $PACKAGE_NAME/feedback-analyze \
+    actions/feedback/build/libs/feedback.jar \
+    --main serverlessfollowup.feedback.AnalyzeComplaint \
     --annotation final true
 
   echo "Creating sequences..."
@@ -77,38 +77,38 @@ function install() {
     --sequence \
     --web true
 
-  bx wsk action create $PACKAGE_NAME/complaints-put-sequence \
-    $PACKAGE_NAME/auth-validate,$PACKAGE_NAME/complaints-put \
+  bx wsk action create $PACKAGE_NAME/feedback-put-sequence \
+    $PACKAGE_NAME/auth-validate,$PACKAGE_NAME/feedback-put \
     --sequence \
     --web true
 
   # sequence reading the document from cloudant changes then calling analyze complaint on it
-  bx wsk action create $PACKAGE_NAME/complaints-analyze-sequence \
-    $PACKAGE_NAME-cloudant/read-document,$PACKAGE_NAME/complaints-analyze,$PACKAGE_NAME/users-notify \
+  bx wsk action create $PACKAGE_NAME/feedback-analyze-sequence \
+    $PACKAGE_NAME-cloudant/read-document,$PACKAGE_NAME/feedback-analyze,$PACKAGE_NAME/users-notify \
     --sequence
 
   echo "Creating triggers..."
-  bx wsk trigger create complaints-analyze-trigger --feed $PACKAGE_NAME-cloudant/changes \
-    -p dbname complaints
-  bx wsk rule create complaints-analyze-rule complaints-analyze-trigger $PACKAGE_NAME/complaints-analyze-sequence
+  bx wsk trigger create feedback-analyze-trigger --feed $PACKAGE_NAME-cloudant/changes \
+    -p dbname feedback
+  bx wsk rule create feedback-analyze-rule feedback-analyze-trigger $PACKAGE_NAME/feedback-analyze-sequence
 }
 
 function uninstall() {
   echo "Removing triggers..."
-  bx wsk rule delete complaints-analyze-rule
-  bx wsk trigger delete complaints-analyze-trigger
+  bx wsk rule delete feedback-analyze-rule
+  bx wsk trigger delete feedback-analyze-trigger
 
   echo "Removing sequence..."
   bx wsk action delete $PACKAGE_NAME/users-add-sequence
-  bx wsk action delete $PACKAGE_NAME/complaints-put-sequence
-  bx wsk action delete $PACKAGE_NAME/complaints-analyze-sequence
+  bx wsk action delete $PACKAGE_NAME/feedback-put-sequence
+  bx wsk action delete $PACKAGE_NAME/feedback-analyze-sequence
 
   echo "Removing actions..."
   bx wsk action delete $PACKAGE_NAME/auth-validate
   bx wsk action delete $PACKAGE_NAME/users-add
   bx wsk action delete $PACKAGE_NAME/users-notify
-  bx wsk action delete $PACKAGE_NAME/complaints-put
-  bx wsk action delete $PACKAGE_NAME/complaints-analyze
+  bx wsk action delete $PACKAGE_NAME/feedback-put
+  bx wsk action delete $PACKAGE_NAME/feedback-analyze
 
   echo "Removing packages..."
   bx wsk package delete $PACKAGE_NAME-cloudant
@@ -132,13 +132,13 @@ function update() {
     actions/users/build/libs/users.jar \
     --main serverlessfollowup.users.NotifyUser
 
-  bx wsk action update $PACKAGE_NAME/complaints-put \
-    actions/complaints/build/libs/complaints.jar \
-    --main serverlessfollowup.complaints.AddComplaint
+  bx wsk action update $PACKAGE_NAME/feedback-put \
+    actions/feedback/build/libs/feedback.jar \
+    --main serverlessfollowup.feedback.AddComplaint
 
-  bx wsk action update $PACKAGE_NAME/complaints-analyze \
-    actions/complaints/build/libs/complaints.jar \
-    --main serverlessfollowup.complaints.AnalyzeComplaint
+  bx wsk action update $PACKAGE_NAME/feedback-analyze \
+    actions/feedback/build/libs/feedback.jar \
+    --main serverlessfollowup.feedback.AnalyzeComplaint
 }
 
 function showenv() {
