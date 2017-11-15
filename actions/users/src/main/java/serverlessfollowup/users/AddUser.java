@@ -51,12 +51,12 @@ public class AddUser {
       System.out.println("No existing user found, creating a new one");
 
       boolean isAnon = "appid_anon".equals(idToken.getAsJsonArray("amr").get(0).getAsString());
-      System.out.println("This is an anonymous user");
       
       Map<String, Object> newUser = new LinkedHashMap<String, Object>();
       newUser.put("subject", subject);
       newUser.put("deviceId", deviceId);
       if (isAnon) {
+        System.out.println("This is an anonymous user");
         newUser.put("name", "Guest");
       } else {
         newUser.put("name", idToken.getAsJsonPrimitive("name").getAsString());
