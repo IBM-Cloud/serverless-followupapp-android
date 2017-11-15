@@ -5,7 +5,7 @@
 A mobile follow-up app using a serverless backend in Java
 
 
-## Provision a NoSQL Service and Create databases.
+## Provision a Cloudant NoSQL DB service
 
 1. Create service instance
 
@@ -33,7 +33,7 @@ A mobile follow-up app using a serverless backend in Java
    curl -X PUT https://account:password@acccount-bluemix.cloudant.com/users
    ```
 
-## Provision a Cognitive Service.
+## Provision a Watson Tone Analyzer service
 
 1. Create instance
 
@@ -47,7 +47,7 @@ A mobile follow-up app using a serverless backend in Java
    bx cf create-service-key serverless-followupapp-tone for-cli
    ```
 
-## Provision App ID Service
+## Provision an App ID service
 
 1. Create instance
 
@@ -61,7 +61,7 @@ A mobile follow-up app using a serverless backend in Java
    bx cf create-service-key serverless-followupapp-appid for-cli
    ```
 
-## Provision a Push Notifications Service
+## Provision a Push Notifications service
 
 1. Create instance
 
@@ -75,11 +75,33 @@ A mobile follow-up app using a serverless backend in Java
    bx cf create-service-key serverless-followupapp-mobilepush for-cli
    ```
 
-## Configure Push Notifications Service.
+## Configure Google/Firebase Push Notification
+
+1. Create a new project in Firebase console
+
+1. Add two applications:
+   1. Package name: com.ibm.mobilefirstplatform.clientsdk.android.push
+   1. and package name: serverlessfollowup.app
+
+1. Download the google-services.json from Firebase console in the android/app folder
+
+## Configure Push Notifications service
+
+1. In IBM Cloud console, set the Sender ID and API Key using values found in the Firebase console
 
 ## Clone the mobile app project
 
 ## Create Serverless actions.
+
+1. Copy template.local.env to local.env
+
+1. Get the credentials for the Cloudant, Push Notifications and App ID services from the IBM Cloud dashboard and replace placeholders in local.env with corresponding values (url, username and password). These properties will be injected into a package so that all actions can get access to the database.
+
+1. Deploy the actions to OpenWhisk
+
+   ```
+   ./deploy.sh --install
+   ```
 
 ### A package for all actions
 
@@ -121,3 +143,6 @@ with a trigger in response to a new document in the feedback database
   find the associated mood
   send a push notification to the user
 
+## Configure the mobile application
+
+1. Edit android/app/src/main/res/values/credentials.xml and fill in the blanks with values from credentials
