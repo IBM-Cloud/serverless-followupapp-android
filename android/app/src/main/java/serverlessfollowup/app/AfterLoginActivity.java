@@ -16,6 +16,7 @@ package serverlessfollowup.app;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,6 +34,9 @@ import com.ibm.bluemix.appid.android.api.AppIDAuthorizationManager;
 import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
 import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
 import com.ibm.bluemix.appid.android.api.userattributes.UserAttributesException;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +52,7 @@ public class AfterLoginActivity extends AppCompatActivity {
 
     private AppIDAuthorizationManager appIDAuthorizationManager;
     private TokensPersistenceManager tokensPersistenceManager;
+    private MFPPushNotificationListener notificationListener;
 
     private JSONArray jaFoodSelection;
 
@@ -75,8 +80,43 @@ public class AfterLoginActivity extends AppCompatActivity {
         setProfilePhoto(profilePhotoUrl);
 
         getSupportActionBar().hide();
+
+        //Handles the notification when it arrives
+        notificationListener = new MFPPushNotificationListener() {
+            @Override
+            public void onReceive(final MFPSimplePushNotification message) {
+                Log.i(MainActivity.class.getName(), "notification: " + message);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        new android.app.AlertDialog.Builder(AfterLoginActivity.this)
+                                .setTitle("Notification")
+                                .setMessage(message.getAlert())
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                    }
+                                })
+                                .show();
+                    }
+                });
+            }
+        };
+        MFPPush.getInstance().listen(notificationListener);
     }
 
+
+    // If the device has been registered previously, hold push notifications when the app is paused
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MFPPush.getInstance().hold();
+    }
+
+    // If the device has been registered previously, ensure the client sdk is still using the notification listener from onCreate when app is resumed
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MFPPush.getInstance().listen(notificationListener);
+    }
 
     public void onSubmitClick(View v) {
         final EditText feedbackTextView = (EditText) findViewById(R.id.yourFeedbackText);

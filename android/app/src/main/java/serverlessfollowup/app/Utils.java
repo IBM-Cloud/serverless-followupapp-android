@@ -12,6 +12,7 @@
  */
 package serverlessfollowup.app;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -20,6 +21,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.ibm.mobilefirstplatform.clientsdk.android.push.internal.MFPPushConstants;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.internal.MFPPushUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -27,16 +31,16 @@ import org.json.JSONException;
  * Static utility methods
  */
 public class Utils {
-    public static boolean isItemInJsonArray(JSONArray jsonArray, String itemToFind){
-        return jsonArray == null ? false : jsonArray.toString().contains("\""+itemToFind+"\"");
+    public static boolean isItemInJsonArray(JSONArray jsonArray, String itemToFind) {
+        return jsonArray == null ? false : jsonArray.toString().contains("\"" + itemToFind + "\"");
     }
 
     public static void removeValueFromJsonArray(JSONArray jArray, String value) throws JSONException {
-        if (jArray == null){
+        if (jArray == null) {
             return;
         }
-        for(int i = 0; i < jArray.length(); i++){
-            if(jArray.getString(i).equals(value)){
+        for (int i = 0; i < jArray.length(); i++) {
+            if (jArray.getString(i).equals(value)) {
                 jArray.remove(i);
                 return;
             }
@@ -63,4 +67,7 @@ public class Utils {
         return output;
     }
 
+    public static String getPushDeviceId(Context context) {
+        return MFPPushUtils.getContentFromSharedPreferences(context, context.getString(R.string.pushAppGuid), MFPPushConstants.DEVICE_ID);
+    }
 }

@@ -28,7 +28,7 @@ A mobile follow-up app using a serverless backend in Java
 1. Create databases
 
    ```
-   curl -X PUT https://account:password@acccount-bluemix.cloudant.com/complaints
+   curl -X PUT https://account:password@acccount-bluemix.cloudant.com/feedback
    curl -X PUT https://account:password@acccount-bluemix.cloudant.com/moods
    curl -X PUT https://account:password@acccount-bluemix.cloudant.com/users
    ```
@@ -55,11 +55,27 @@ A mobile follow-up app using a serverless backend in Java
    bx cf create-service AppID "Graduated tier" serverless-followupapp-appid
    ```
 
+1. Create credentials to use the service with Cloud Functions
+
    ```
    bx cf create-service-key serverless-followupapp-appid for-cli
    ```
 
+## Provision a Push Notifications Service
+
+1. Create instance
+
+   ```
+   bx cf create-service imfpush lite serverless-followupapp-mobilepush
+   ```
+
 1. Create credentials to use the service with Cloud Functions
+
+   ```
+   bx cf create-service-key serverless-followupapp-mobilepush for-cli
+   ```
+
+## Configure Push Notifications Service.
 
 ## Clone the mobile app project
 
@@ -92,17 +108,16 @@ a sequence exposed as a web action PUT verb
   required Authorization: Bearer {accessToken}
 
 action **validate_token**
-action **put_complaint**
-  retrieve the user associated with the complaint by looking at the sub of the Authorization token
-  store a new complaint document, setting the user_id
+action **put_feedback**
+  retrieve the user associated with the feedback by looking at the sub of the Authorization token
+  store a new feedback document, setting the user_id
 
 ### Analyze feedback
 
-with a trigger in response to a new document in the complaints database
-  load the complaints
+with a trigger in response to a new document in the feedback database
+  load the feedback
   load the user
   call tone analysis
   find the associated mood
   send a push notification to the user
 
-## Configure Push Notifications Service.

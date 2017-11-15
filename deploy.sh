@@ -49,6 +49,11 @@ function install() {
     -p password $CLOUDANT_PASSWORD \
     -p host $CLOUDANT_HOST
 
+  bx wsk package bind /whisk.system/pushnotifications \
+    $PACKAGE_NAME-push \
+    -p appId $PUSH_APP_GUID \
+    -p appSecret $PUSH_APP_SECRET
+
   echo "Creating actions..."
   bx wsk action create $PACKAGE_NAME/auth-validate \
     actions/validate/build/libs/validate.jar \
@@ -88,7 +93,7 @@ function install() {
 
   # sequence reading the document from cloudant changes then calling analyze feedback on it
   bx wsk action create $PACKAGE_NAME/feedback-analyze-sequence \
-    $PACKAGE_NAME-cloudant/read-document,$PACKAGE_NAME/feedback-analyze,$PACKAGE_NAME/users-notify \
+    $PACKAGE_NAME-cloudant/read-document,$PACKAGE_NAME/feedback-analyze,$PACKAGE_NAME/users-notify,$PACKAGE_NAME-push/sendMessage \
     --sequence
 
   echo "Creating triggers..."
@@ -116,6 +121,7 @@ function uninstall() {
 
   echo "Removing packages..."
   bx wsk package delete $PACKAGE_NAME-cloudant
+  bx wsk package delete $PACKAGE_NAME-push
   bx wsk package delete $PACKAGE_NAME
 
   echo "Done"

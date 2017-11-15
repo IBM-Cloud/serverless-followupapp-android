@@ -1,5 +1,7 @@
 package serverlessfollowup.app;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
 import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
@@ -41,6 +43,7 @@ public class ServerlessAPI {
     }
 
     public void register(AccessToken accessToken, IdentityToken identityToken, String deviceId) throws Exception {
+        Log.i(ServerlessAPI.class.getName(), "Registering user and device " + deviceId);
         Map<String, Object> bodyContent = new HashMap<String, Object>();
         bodyContent.put("deviceId", deviceId);
         RequestBody body = RequestBody.create(JSON, new Gson().toJson(bodyContent));
@@ -50,7 +53,7 @@ public class ServerlessAPI {
                 .post(body)
                 .build();
         Response response = client.newCall(request).execute();
-        System.out.println(response.body().string());
+        Log.i(ServerlessAPI.class.getName(), response.body().string());
     }
 
     public void sendFeedback(AccessToken accessToken, String text) throws Exception {
@@ -63,6 +66,6 @@ public class ServerlessAPI {
                 .post(body)
                 .build();
         Response response = client.newCall(request).execute();
-        System.out.println(response.body().string());
+        Log.i(ServerlessAPI.class.getName(), response.body().string());
     }
 }

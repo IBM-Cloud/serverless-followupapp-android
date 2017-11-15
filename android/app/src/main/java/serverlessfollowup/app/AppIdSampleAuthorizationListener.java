@@ -57,7 +57,7 @@ public class AppIdSampleAuthorizationListener implements AuthorizationListener {
 
         //register the user with the backend
         try {
-            ServerlessAPI.instance().register(accessToken, identityToken, "DEVICE_ID");
+            ServerlessAPI.instance().register(accessToken, identityToken, Utils.getPushDeviceId(activity.getApplicationContext()));
         } catch (Exception e) {
             e.printStackTrace();
         }

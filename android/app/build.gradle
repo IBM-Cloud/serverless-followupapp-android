@@ -18,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        // avoid "Duplicate files copied in APK" error
+        exclude 'META-INF/LICENSE'
+    }
 }
 
 dependencies {

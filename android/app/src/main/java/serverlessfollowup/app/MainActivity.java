@@ -13,6 +13,7 @@
 
 package serverlessfollowup.app;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,7 +26,16 @@ import com.ibm.bluemix.appid.android.api.LoginWidget;
 import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
 import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushException;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushResponseListener;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.internal.MFPPushConstants;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.internal.MFPPushUtils;
 import com.vlonjatg.progressactivity.ProgressRelativeLayout;
+
+import static com.ibm.mobilefirstplatform.clientsdk.android.push.internal.MFPPushConstants.DEVICE_ID;
 
 /**
  * This is the App front page activity.
@@ -56,14 +66,48 @@ public class MainActivity extends AppCompatActivity {
         ServerlessAPI.initialize(getString(R.string.serverlessBackendUrl));
 
         appId = AppID.getInstance();
-
-        appId.initialize(this, getResources().getString(R.string.authTenantId), region);
+        appId.initialize(this, getString(R.string.authTenantId), region);
 
         this.appIDAuthorizationManager = new AppIDAuthorizationManager(this.appId);
         tokensPersistenceManager = new TokensPersistenceManager(this, appIDAuthorizationManager);
 
         progressActivity = (ProgressRelativeLayout) findViewById(R.id.activity_main);
-        progressActivity.showContent();
+        progressActivity.showLoading();
+
+        // Initialize the SDK
+        BMSClient.getInstance().initialize(this, BMSClient.REGION_US_SOUTH);
+
+        //Initialize client Push SDK
+        final MFPPush push = MFPPush.getInstance();
+        push.initialize(getApplicationContext(), getString(R.string.pushAppGuid), getString(R.string.pushClientSecret));
+
+        //Register Android devices
+        push.registerDevice(new MFPPushResponseListener<String>() {
+            @Override
+            public void onSuccess(String response) {
+                //handle successful device registration here
+                Log.i(MainActivity.class.getName(), "Registered device for push notifications: " + response);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressActivity.showContent();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(MFPPushException ex) {
+                //handle failure in device registration here
+                Log.i(MainActivity.class.getName(), "Failed to register device for push notifications", ex);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressActivity.showContent();
+                    }
+                });
+            }
+        });
+
     }
 
     /**
