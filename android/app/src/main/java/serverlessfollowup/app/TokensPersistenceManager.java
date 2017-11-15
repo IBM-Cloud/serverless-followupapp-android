@@ -29,97 +29,97 @@ import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
  * might have private information.
  */
 public class TokensPersistenceManager {
-    enum StoredTokenState{
-        empty, anonymous, identified
+  enum StoredTokenState {
+    empty, anonymous, identified
+  }
+
+  private static final String APPID_ACCESS_TOKEN = "appid_access_token";
+  private static final String APPID_TOKENS_PREF = "appid_tokens";
+  private static final String APPID_USER_NAME = "appid_user_name";
+  private static final String APPID_USER_ID = "appid_user_id";
+  private static final String APPID_IS_ANONYMOUS = "appid_is_anonymous";
+
+  private static String ANONYMOUS_USER_NAME = "Guest";
+  Context ctx;
+  AppIDAuthorizationManager appIDAuthorizationManager;
+
+  public TokensPersistenceManager(Context ctx, AppIDAuthorizationManager appIDAuthorizationManager) {
+    this.appIDAuthorizationManager = appIDAuthorizationManager;
+    this.ctx = ctx;
+  }
+
+  public void persistTokensOnDevice() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    AccessToken accessToken = appIDAuthorizationManager.getAccessToken();
+    IdentityToken identityToken = appIDAuthorizationManager.getIdentityToken();
+
+    String storedAccessToken = accessToken == null ? null : accessToken.getRaw();
+    sharedPreferences.edit().
+      putString(APPID_ACCESS_TOKEN, storedAccessToken).
+      putString(APPID_USER_NAME, identityToken.getName()).
+      putString(APPID_USER_ID, identityToken.getSubject()).
+      putBoolean(APPID_IS_ANONYMOUS, identityToken.isAnonymous()).
+      commit();
+  }
+
+  public String getStoredAccessToken() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    return sharedPreferences.getString(APPID_ACCESS_TOKEN, null);
+  }
+
+  public String getStoredAnonymousAccessToken() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    if (!sharedPreferences.getBoolean(APPID_IS_ANONYMOUS, false)) {
+      return null;
     }
+    return sharedPreferences.getString(APPID_ACCESS_TOKEN, null);
+  }
 
-    private static final String APPID_ACCESS_TOKEN = "appid_access_token";
-    private static final String APPID_TOKENS_PREF = "appid_tokens";
-    private static final String APPID_USER_NAME = "appid_user_name";
-    private static final String APPID_USER_ID = "appid_user_id";
-    private static final String APPID_IS_ANONYMOUS = "appid_is_anonymous";
-
-    private static String ANONYMOUS_USER_NAME = "Guest";
-    Context ctx;
-    AppIDAuthorizationManager appIDAuthorizationManager;
-    
-    public TokensPersistenceManager(Context ctx, AppIDAuthorizationManager appIDAuthorizationManager){
-        this.appIDAuthorizationManager = appIDAuthorizationManager;
-        this.ctx = ctx;
+  public String getStoredLoginAccessToken() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    if (sharedPreferences.getBoolean(APPID_IS_ANONYMOUS, true)) {
+      return null;
     }
+    return sharedPreferences.getString(APPID_ACCESS_TOKEN, null);
+  }
 
-    public void persistTokensOnDevice(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        AccessToken accessToken = appIDAuthorizationManager.getAccessToken();
-        IdentityToken identityToken = appIDAuthorizationManager.getIdentityToken();
+  public boolean isStoredTokenAnonymous() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    return sharedPreferences.getBoolean(APPID_IS_ANONYMOUS, false);
+  }
 
-        String storedAccessToken = accessToken == null ? null : accessToken.getRaw();
-        sharedPreferences.edit().
-                putString(APPID_ACCESS_TOKEN, storedAccessToken).
-                putString(APPID_USER_NAME, identityToken.getName()).
-                putString(APPID_USER_ID, identityToken.getSubject()).
-                putBoolean(APPID_IS_ANONYMOUS, identityToken.isAnonymous()).
-                commit();
+  public boolean isStoredTokenExists() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    return !sharedPreferences.getAll().isEmpty();
+  }
+
+  public boolean clearStoredTokens() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    return !sharedPreferences.edit().clear().commit();
+  }
+
+  public String getStoredUserName() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    if (sharedPreferences.getBoolean(APPID_IS_ANONYMOUS, true)) {
+      return ANONYMOUS_USER_NAME;
     }
+    return sharedPreferences.getString(APPID_USER_NAME, null);
+  }
 
-    public String getStoredAccessToken(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        return sharedPreferences.getString(APPID_ACCESS_TOKEN, null);
-    }
+  public String getStoredUserID() {
+    SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
+    return sharedPreferences.getString(APPID_USER_ID, null);
+  }
 
-    public String getStoredAnonymousAccessToken(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        if(!sharedPreferences.getBoolean(APPID_IS_ANONYMOUS, false)){
-            return null;
-        }
-        return sharedPreferences.getString(APPID_ACCESS_TOKEN, null);
+  public StoredTokenState getStoreTokenState() {
+    if (!isStoredTokenExists()) {
+      return StoredTokenState.empty;
     }
-
-    public String getStoredLoginAccessToken(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        if(sharedPreferences.getBoolean(APPID_IS_ANONYMOUS, true)){
-            return null;
-        }
-        return sharedPreferences.getString(APPID_ACCESS_TOKEN, null);
+    if (isStoredTokenAnonymous()) {
+      return StoredTokenState.anonymous;
+    } else {
+      return StoredTokenState.identified;
     }
-
-    public boolean isStoredTokenAnonymous(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        return sharedPreferences.getBoolean(APPID_IS_ANONYMOUS, false);
-    }
-
-    public boolean isStoredTokenExists(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        return !sharedPreferences.getAll().isEmpty();
-    }
-
-    public boolean clearStoredTokens(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        return !sharedPreferences.edit().clear().commit();
-    }
-
-    public String getStoredUserName(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        if(sharedPreferences.getBoolean(APPID_IS_ANONYMOUS, true)){
-            return ANONYMOUS_USER_NAME;
-        }
-        return sharedPreferences.getString(APPID_USER_NAME, null);
-    }
-
-    public String getStoredUserID(){
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(APPID_TOKENS_PREF, ctx.MODE_PRIVATE);
-        return sharedPreferences.getString(APPID_USER_ID, null);
-    }
-
-    public StoredTokenState getStoreTokenState(){
-        if(!isStoredTokenExists()){
-            return StoredTokenState.empty;
-        }
-        if (isStoredTokenAnonymous()){
-            return StoredTokenState.anonymous;
-        }else{
-            return StoredTokenState.identified;
-        }
-    }
+  }
 
 }

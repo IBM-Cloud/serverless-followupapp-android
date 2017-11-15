@@ -22,15 +22,15 @@ import android.widget.TextView;
  */
 public class TokenActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_token);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_token);
 
-        String accessToken = getIntent().getStringExtra("accessToken");
-        String idToken = getIntent().getStringExtra("idToken");
+    String accessToken = getIntent().getStringExtra("accessToken");
+    String idToken = getIntent().getStringExtra("idToken");
 
-        ((TextView)findViewById(R.id.accessTokenData)).setText(accessToken);
-        ((TextView)findViewById(R.id.idTokenData)).setText(idToken);
-    }
+    ((TextView) findViewById(R.id.accessTokenData)).setText(accessToken);
+    ((TextView) findViewById(R.id.idTokenData)).setText(idToken);
+  }
 }

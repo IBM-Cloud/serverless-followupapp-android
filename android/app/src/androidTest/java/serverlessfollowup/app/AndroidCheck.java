@@ -39,70 +39,69 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class AndroidCheck {
 
-    private UiDevice device;
-    private static final String PACKAGE = "com.ibm.bluemix.appid";
+  private UiDevice device;
+  private static final String PACKAGE = "serverlessfollowup.app";
 
-    @Before
-    public void setUp() throws IOException, UiObjectNotFoundException {
-        startApp();
+  @Before
+  public void setUp() throws IOException, UiObjectNotFoundException {
+    startApp();
+  }
+
+  @Test
+  public void runTest() throws UiObjectNotFoundException, InterruptedException {
+
+    clickOnObject("loginButton");
+    UiObject google_login = device.findObject(new UiSelector().resourceId("google_login"));
+    google_login.clickAndWaitForNewWindow(10000);
+
+    String displayName = getDisplayName();
+    assertThat(displayName, containsString("Lon Don"));
+  }
+
+  private void startApp() {
+    // Initialize UiDevice instance
+    device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+    // Start from the home screen
+    device.pressHome();
+
+    // Wait for launcher
+    final String launcherPackage = device.getLauncherPackageName();
+
+    //assertThat(launcherPackage, notNullValue());
+    device.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), 5000);
+
+    // Launch the app
+    Context context = InstrumentationRegistry.getContext();
+    final Intent intent = context.getPackageManager().getLaunchIntentForPackage(PACKAGE);
+
+    // Clear out any previous instances
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+    context.startActivity(intent);
+
+    // Wait for the app to appear
+    device.wait(Until.hasObject(By.pkg(PACKAGE).depth(0)), 5000);
+  }
+
+  private void clickOnObject(String id) throws UiObjectNotFoundException {
+    UiObject object = getObjectById(id);
+    object.click();
+  }
+
+  private UiObject getObjectById(String id) {
+    return device.findObject(new UiSelector().resourceId(PACKAGE + ":id/" + id));
+  }
+
+  protected String getDisplayName() throws UiObjectNotFoundException {
+    try {
+      device.wait(Until.findObject(By.res(PACKAGE, "userName")), 25000);
+      UiObject result = getObjectById("userName");
+      return result.getText();
+    } catch (Throwable t) {
+      return "";
     }
-
-    @Test
-    public void runTest() throws UiObjectNotFoundException, InterruptedException {
-
-        clickOnObject("loginButton");
-        UiObject google_login = device.findObject(new UiSelector().resourceId("google_login"));
-        google_login.clickAndWaitForNewWindow(10000);
-
-        String displayName = getDisplayName();
-        assertThat(displayName, containsString("Lon Don"));
-    }
-
-    private void startApp(){
-        // Initialize UiDevice instance
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
-        // Start from the home screen
-        device.pressHome();
-
-        // Wait for launcher
-        final String launcherPackage = device.getLauncherPackageName();
-
-        //assertThat(launcherPackage, notNullValue());
-        device.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), 5000);
-
-        // Launch the app
-        Context context = InstrumentationRegistry.getContext();
-        final Intent intent = context.getPackageManager().getLaunchIntentForPackage(PACKAGE);
-
-        // Clear out any previous instances
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        context.startActivity(intent);
-
-        // Wait for the app to appear
-        device.wait(Until.hasObject(By.pkg(PACKAGE).depth(0)), 5000);
-    }
-
-    private void clickOnObject(String id) throws UiObjectNotFoundException {
-        UiObject object = getObjectById(id);
-        object.click();
-    }
-
-    private UiObject getObjectById(String id){
-        return device.findObject(new UiSelector().resourceId(PACKAGE + ":id/" + id));
-    }
-
-    protected String getDisplayName() throws UiObjectNotFoundException {
-        try{
-            device.wait(Until.findObject(By.res(PACKAGE,"userName")),25000);
-            UiObject result = getObjectById("userName");
-            return result.getText();
-        }
-        catch (Throwable t){
-            return "";
-        }
-    }
+  }
 }
 
 
