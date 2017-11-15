@@ -1,4 +1,4 @@
-package com.ibm.bluemix.appid.android.sample.appid;
+package serverlessfollowup.app;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;

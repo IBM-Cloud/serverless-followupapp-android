@@ -11,7 +11,7 @@ import com.cloudant.client.api.model.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-public class AddComplaint {
+public class AddFeedback {
 
   public static JsonObject main(JsonObject args) throws Exception {
     // read the tokens
@@ -25,19 +25,19 @@ public class AddComplaint {
     // extract the subject from the token
     String subject = accessToken.getAsJsonPrimitive("sub").getAsString();
 
-    // store the complaints
+    // store the feedback
     CloudantClient client = ClientBuilder.url(new URL(args.getAsJsonPrimitive("services.cloudant.url").getAsString()))
         .build();
-    Database complaints = client.database("complaints", true);
+    Database feedbacks = client.database("feedback", true);
 
-    Map<String, Object> newComplaint = new LinkedHashMap<String, Object>();
-    newComplaint.put("subject", subject);
-    newComplaint.put("message", args.getAsJsonPrimitive("message").getAsString());
-    Response newComplaintResponse = complaints.save(newComplaint);
+    Map<String, Object> newFeedback = new LinkedHashMap<String, Object>();
+    newFeedback.put("subject", subject);
+    newFeedback.put("message", args.getAsJsonPrimitive("message").getAsString());
+    Response newFeedbackResponse = feedbacks.save(newFeedback);
 
     JsonObject status = new JsonObject();
-    status.addProperty("ok", newComplaintResponse.getError() == null);
-    status.add("response", new Gson().toJsonTree(newComplaintResponse));
+    status.addProperty("ok", newFeedbackResponse.getError() == null);
+    status.add("response", new Gson().toJsonTree(newFeedbackResponse));
     
     JsonObject body = new JsonObject();
     body.add("body", status);

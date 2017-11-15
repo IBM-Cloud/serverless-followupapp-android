@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package com.ibm.bluemix.appid.android.sample.appid;
+package serverlessfollowup.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

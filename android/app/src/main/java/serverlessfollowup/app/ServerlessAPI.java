@@ -1,4 +1,4 @@
-package com.ibm.bluemix.appid.android.sample.appid;
+package serverlessfollowup.app;
 
 import com.google.gson.Gson;
 import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
@@ -54,11 +54,11 @@ public class ServerlessAPI {
     }
 
     public void sendFeedback(AccessToken accessToken, String text) throws Exception {
-        Map<String, Object> complaint = new HashMap<String, Object>();
-        complaint.put("message", text);
-        RequestBody body = RequestBody.create(JSON, new Gson().toJson(complaint));
+        Map<String, Object> feedback = new HashMap<String, Object>();
+        feedback.put("message", text);
+        RequestBody body = RequestBody.create(JSON, new Gson().toJson(feedback));
         Request request = new Request.Builder()
-                .url(backendUrl + "/complaints-put-sequence")
+                .url(backendUrl + "/feedback-put-sequence")
                 .addHeader("Authorization", "Bearer " + accessToken.getRaw())
                 .post(body)
                 .build();

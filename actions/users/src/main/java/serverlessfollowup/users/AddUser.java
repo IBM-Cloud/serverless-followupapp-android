@@ -56,7 +56,9 @@ public class AddUser {
       Map<String, Object> newUser = new LinkedHashMap<String, Object>();
       newUser.put("subject", subject);
       newUser.put("deviceId", deviceId);
-      if (!isAnon) {
+      if (isAnon) {
+        newUser.put("name", "Guest");
+      } else {
         newUser.put("name", idToken.getAsJsonPrimitive("name").getAsString());
         newUser.put("email", idToken.getAsJsonPrimitive("email").getAsString());
         newUser.put("picture", idToken.getAsJsonPrimitive("picture").getAsString());

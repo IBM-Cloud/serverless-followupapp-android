@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.bluemix.appid.android.sample.appid;
+package serverlessfollowup.app;
 
 
 import android.content.Context;

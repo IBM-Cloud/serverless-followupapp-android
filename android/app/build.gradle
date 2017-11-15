@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.ibm.bluemix.appid"
+        applicationId "serverlessfollowup.app"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -26,6 +26,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.github.vlonjatg:progress-activity:v2.0.3'
+    compile group: 'com.ibm.mobilefirstplatform.clientsdk.android', name: 'push', version: '3.+', ext: 'aar', transitive: true
 
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.1.0'
@@ -34,3 +35,5 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -29,6 +29,10 @@ function install() {
   curl -s -X PUT $CLOUDANT_URL/feedback | grep -v file_exists
   curl -s -X PUT $CLOUDANT_URL/moods | grep -v file_exists
 
+  # echo "Inserting database design documents..."
+  # # ignore "document already exists error"
+  curl -s -X POST -H 'Content-Type: application/json' -d @actions/feedback/moods.json $CLOUDANT_URL/moods/_bulk_docs | grep -v conflict
+
   echo "Creating packages..."
   bx wsk package create $PACKAGE_NAME\
     -p services.cloudant.url $CLOUDANT_URL\
@@ -63,12 +67,12 @@ function install() {
 
   bx wsk action create $PACKAGE_NAME/feedback-put \
     actions/feedback/build/libs/feedback.jar \
-    --main serverlessfollowup.feedback.AddComplaint \
+    --main serverlessfollowup.feedback.AddFeedback \
     --annotation final true
 
   bx wsk action create $PACKAGE_NAME/feedback-analyze \
     actions/feedback/build/libs/feedback.jar \
-    --main serverlessfollowup.feedback.AnalyzeComplaint \
+    --main serverlessfollowup.feedback.AnalyzeFeedback \
     --annotation final true
 
   echo "Creating sequences..."
@@ -82,7 +86,7 @@ function install() {
     --sequence \
     --web true
 
-  # sequence reading the document from cloudant changes then calling analyze complaint on it
+  # sequence reading the document from cloudant changes then calling analyze feedback on it
   bx wsk action create $PACKAGE_NAME/feedback-analyze-sequence \
     $PACKAGE_NAME-cloudant/read-document,$PACKAGE_NAME/feedback-analyze,$PACKAGE_NAME/users-notify \
     --sequence
@@ -134,11 +138,11 @@ function update() {
 
   bx wsk action update $PACKAGE_NAME/feedback-put \
     actions/feedback/build/libs/feedback.jar \
-    --main serverlessfollowup.feedback.AddComplaint
+    --main serverlessfollowup.feedback.AddFeedback
 
   bx wsk action update $PACKAGE_NAME/feedback-analyze \
     actions/feedback/build/libs/feedback.jar \
-    --main serverlessfollowup.feedback.AnalyzeComplaint
+    --main serverlessfollowup.feedback.AnalyzeFeedback
 }
 
 function showenv() {
