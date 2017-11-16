@@ -18,9 +18,6 @@
     <string name="login">Login</string>
     <string name="view_token">View Token</string>
     <string name="greet">Hi</string>
-    <string name="description">Description</string>
-    <string name="selected_icon">selected icon</string>
-    <string name="welcome_to_your_working_app_id_sample">Welcome to your App ID sample app</string>
     <string name="facebook_app_id">YOUR_APP_ID_HERE</string>
     <string name="feedbackHint">Give us your feedback</string>
     <string name="submit">Send Feedback</string>
