@@ -22,14 +22,23 @@ android {
         // avoid "Duplicate files copied in APK" error
         exclude 'META-INF/LICENSE'
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
-    compile 'com.github.ibm-cloud-security:appid-clientsdk-android:1.+'
+    compile 'com.github.ibm-cloud-security:appid-clientsdk-android:1.1.2'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
-    compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.github.vlonjatg:progress-activity:v2.0.3'
-    compile group: 'com.ibm.mobilefirstplatform.clientsdk.android', name: 'push', version: '3.+', ext: 'aar', transitive: true
+
+    compile group: 'com.ibm.mobilefirstplatform.clientsdk.android',
+            name: 'push',
+            version: '3.6.3',
+            ext: 'aar',
+            transitive: true
+
     compile 'com.android.support:appcompat-v7:25.1.0'
 
     testCompile 'junit:junit:4.12'
