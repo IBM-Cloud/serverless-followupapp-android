@@ -10,9 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
-import java.text.DateFormat;
 import java.util.Base64;
-import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -23,7 +21,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.impl.FixedClock;
 
 /**
  * Validates authorization header. Used as first action in sequences to protect them.
@@ -36,6 +33,7 @@ public class ValidateToken {
   /**
    * Input:
    * <ul>
+   *   <li>services.appid.url - the App ID service instance OAuth url</li>
    *   <li>__ow_headers - to decode and validate the Authorization header</li>
    *   <li>__ow_headers.authorization - Bearer accessToken [idToken]
    * </ul>
@@ -112,7 +110,7 @@ public class ValidateToken {
     return args;
   }
 
-  private static JwtParser makeParser(String algo, String modulus, String exponent) {
+  static JwtParser makeParser(String algo, String modulus, String exponent) {
     if (!"RSA".equals(algo)) {
       throw new IllegalArgumentException(algo + " is not a supported algorithm");
     }

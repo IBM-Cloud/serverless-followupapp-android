@@ -19,6 +19,7 @@ public class AddFeedback {
   /**
    * Input:
    * <ul>
+   *   <li>services.cloudant.url - Cloudant service url including username and password
    *   <li>_accessToken - the decoded JSON representation of the accessToken</li>
    *   <li>message - the message to store</li>
    * </ul>

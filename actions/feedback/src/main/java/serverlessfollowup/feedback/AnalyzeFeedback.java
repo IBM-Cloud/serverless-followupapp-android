@@ -13,21 +13,40 @@ import com.ibm.watson.developer_cloud.tone_analyzer.v3.model.ToneCategory;
 import com.ibm.watson.developer_cloud.tone_analyzer.v3.model.ToneOptions;
 import com.ibm.watson.developer_cloud.tone_analyzer.v3.model.ToneScore;
 
+/**
+ * Uses Tone Analyzer to get the mood of a user feedback.
+ */
 public class AnalyzeFeedback {
 
+  /**
+   * Input:
+   * <ul>
+   *   <li>services.cloudant.url - Cloudant service url including username and password
+   *   <li>services.ta.url - Tone Analyzer API endpoint</li>
+   *   <li>services.ta.username - Tone Analyzer username</li>
+   *   <li>services.ta.password - Tone Analyzer password</li>
+   *   <li>subject - the user identifier</li>
+   *   <li>message - the message to analyze</li>
+   * </ul>
+   * 
+   * Output:
+   * <ul>
+   *   <li>subject - the user identifier</li>
+   *   <li>message - a message to send back to the user</li>
+   * </ul>
+   */
   public static JsonObject main(JsonObject args) throws Exception {
-
-    System.out.println(args);
-    
     String subject = args.getAsJsonPrimitive("subject").getAsString();
     String feedbackText = args.getAsJsonPrimitive("message").getAsString();
     
-    // get the feedback tone
+    // initialize tone analyzer
     final String VERSION_DATE = "2016-05-19";
     ToneAnalyzer service = new ToneAnalyzer(VERSION_DATE);
+    service.setEndPoint(args.getAsJsonPrimitive("services.ta.url").getAsString());
     service.setUsernameAndPassword(args.getAsJsonPrimitive("services.ta.username").getAsString(),
         args.getAsJsonPrimitive("services.ta.password").getAsString());
     
+    // get the feedback tone
     ToneOptions toneOptions = new ToneOptions.Builder().text(feedbackText).build();
     ToneAnalysis tone = service.tone(toneOptions).execute();
 
@@ -42,7 +61,7 @@ public class AnalyzeFeedback {
         }
       }
     }
-    System.out.println(feedbackToneScore);
+    System.out.println("Feedback tone is " + feedbackToneScore);
     
     // look for a mood message for this tone
     CloudantClient client = ClientBuilder.url(new URL(args.getAsJsonPrimitive("services.cloudant.url").getAsString()))
