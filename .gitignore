@@ -1,5 +1,2 @@
 local.env
-build
 .gradle
-bin
-google-services.json
