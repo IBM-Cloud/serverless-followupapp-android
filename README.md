@@ -47,6 +47,12 @@ A mobile follow-up app using a serverless backend in Java
    bx cf create-service-key serverless-followupapp-tone for-cli
    ```
 
+1. Retrieve the credentials
+
+   ```
+   bx cf service-key serverless-followupapp-tone for-cli
+   ```
+
 ## Provision an App ID service
 
 1. Create instance
@@ -59,6 +65,12 @@ A mobile follow-up app using a serverless backend in Java
 
    ```
    bx cf create-service-key serverless-followupapp-appid for-cli
+   ```
+
+1. Retrieve the credentials
+
+   ```
+   bx cf service-key serverless-followupapp-appid for-cli
    ```
 
 ## Provision a Push Notifications service
@@ -75,25 +87,35 @@ A mobile follow-up app using a serverless backend in Java
    bx cf create-service-key serverless-followupapp-mobilepush for-cli
    ```
 
+1. Retrieve the credentials
+
+   ```
+   bx cf service-key serverless-followupapp-mobilepush for-cli
+   ```
+
+## Clone the mobile app project
+
+https://github.com/IBM-Bluemix/serverless-followupapp-android
+
 ## Configure Google/Firebase Push Notification
 
 1. Create a new project in Firebase console
 
-1. Add two applications:
-   1. Package name: com.ibm.mobilefirstplatform.clientsdk.android.push
-   1. and package name: serverlessfollowup.app
+1. In the Settings, in the General tab, add two applications:
+   1. one with the package name set to: com.ibm.mobilefirstplatform.clientsdk.android.push
+   1. and one with the package name set to: serverlessfollowup.app
 
-1. Download the google-services.json from Firebase console in the android/app folder
+1. Download the google-services.json from Firebase console and place this file in the android/app folder of the repository
 
 ## Configure Push Notifications service
 
-1. In IBM Cloud console, set the Sender ID and API Key using values found in the Firebase console
+1. Retrieve the Sender ID and Server Key from the Cloud Messaging tab in the Settings for your Firebase project
 
-## Clone the mobile app project
+1. In IBM Cloud console, set the Sender ID and API Key (Server Key) using the values from the Firebase project
 
 ## Create Serverless actions.
 
-1. Build the actions
+1. From the root of the project, build the actions
 
    ```
    ./android/gradlew -p actions clean jar
@@ -101,7 +123,11 @@ A mobile follow-up app using a serverless backend in Java
 
 1. Copy template.local.env to local.env
 
-1. Get the credentials for the Cloudant, Push Notifications and App ID services from the IBM Cloud dashboard and replace placeholders in local.env with corresponding values (url, username and password). These properties will be injected into a package so that all actions can get access to the database.
+   ```
+   cp template.local.env local.env
+   ```
+
+1. Get the credentials for Cloudant, Tone Analyzer, Push Notifications and App ID services from the IBM Cloud dashboard (or the output of the bx commands we ran before) and replace placeholders in local.env with corresponding values. These properties will be injected into a package so that all actions can get access to the database.
 
 1. Deploy the actions to OpenWhisk
 
@@ -151,4 +177,16 @@ with a trigger in response to a new document in the feedback database
 
 ## Configure the mobile application
 
+1. Open the Android folder project in Android Studio 2.3.3 or later
+
 1. Edit android/app/src/main/res/values/credentials.xml and fill in the blanks with values from credentials
+
+1. Build the project
+
+1. Start the application on a real device or with an emulator. For the emulator to receive push notifications, make sure to pick an image with the Google APIs and to log in with a Google account within the emulator.
+
+1. Watch the Cloud Functions in the background
+
+   ```
+   bx wsk activation poll
+   ```
