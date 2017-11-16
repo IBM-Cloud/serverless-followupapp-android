@@ -60,6 +60,7 @@ obj/
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/uiDesigner.xml
+.idea/gradle.xml
 
 # OS-specific files
 .DS_Store
