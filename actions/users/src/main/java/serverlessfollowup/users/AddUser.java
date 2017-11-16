@@ -12,8 +12,25 @@ import com.cloudant.client.api.model.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+/**
+ * Adds a new user.
+ */
 public class AddUser {
 
+  /**
+   * Input:
+   * <ul>
+   *   <li>_accessToken - the decoded JSON representation of the access token</li>
+   *   <li>_idToken - the decoded JSON representation of the id token</li>
+   *   <li>deviceId - the mobile device id of the user, used to send notifications back to the device
+   * </ul>
+   * 
+   * Output:
+   * <ul>
+   *   <li>body.ok: true|false</li>
+   *   <li>body.response: optional details from the database</li>
+   * </ul>
+   */
   public static JsonObject main(JsonObject args) throws Exception {
     // read the tokens
     JsonObject accessToken = (JsonObject) args.get("_accessToken");

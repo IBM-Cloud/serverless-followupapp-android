@@ -12,8 +12,24 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-public class NotifyUser {
+/**
+ * Prepares a notification for a user.
+ */
+public class PrepareUserNotification {
 
+  /**
+   * Input:
+   * <ul>
+   *   <li>subject - the user to notify</li>
+   *   <li>message - the message to send</li>
+   * </ul>
+   * 
+   * Output:
+   * <ul>
+   *   <li>deviceIds - an array containing the user deviceId</li>
+   *   <li>text - the actual message to send where references to <code>{{name}}</code> from the original message have been replaced with the actual user name</li>
+   * </ul>
+   */
   public static JsonObject main(JsonObject args) throws Exception {    
     
     String subject = args.getAsJsonPrimitive("subject").getAsString();

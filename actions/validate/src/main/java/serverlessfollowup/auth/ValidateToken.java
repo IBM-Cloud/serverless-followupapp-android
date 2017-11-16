@@ -20,40 +20,34 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.impl.FixedClock;
 
+/**
+ * Validates authorization header. Used as first action in sequences to protect them.
+ */
 public class ValidateToken {
 
   private static JsonParser gsonParser = new JsonParser();
   private static Gson gson = new Gson();
 
-  static JwtParser makeParser(String algo, String modulus, String exponent) {
-    if (!"RSA".equals(algo)) {
-      throw new IllegalArgumentException(algo + " is not a supported algorithm");
-    }
-
-    RSAPublicKeySpec rsaKeySpec = new RSAPublicKeySpec(new BigInteger(Base64.getDecoder().decode(modulus)),
-        new BigInteger(Base64.getDecoder().decode(exponent)));
-
-    KeyFactory keyF;
-    try {
-      keyF = KeyFactory.getInstance(algo);
-      PublicKey publicKey = keyF.generatePublic(rsaKeySpec);
-      return Jwts.parser().setSigningKey(publicKey);
-    } catch (NoSuchAlgorithmException e) {
-      throw new IllegalArgumentException(e);
-    } catch (InvalidKeySpecException e) {
-      throw new IllegalArgumentException(e);
-    }
-  }
-
+  /**
+   * Input:
+   * <ul>
+   *   <li>__ow_headers - to decode and validate the Authorization header</li>
+   *   <li>__ow_headers.authorization - Bearer accessToken [idToken]
+   * </ul>
+   * 
+   * Output:
+   * <ul>
+   *   <li>all input arguments</li>
+   *   <li>_accessToken: decoded JSON representation of the access token</li>
+   *   <li>_idToken: decoded JSON representation of the id token if specified in the Authorization header</li>
+   * </ul>
+   */
   public static JsonObject main(JsonObject args) throws Exception {
-
-
     // we expect the Authorization header to be set
     JsonObject headers = args.getAsJsonObject("__ow_headers");
     JsonPrimitive authorization = headers.getAsJsonPrimitive("authorization");
@@ -75,8 +69,12 @@ public class ValidateToken {
     String idToken = authorizationElements.length == 3 ? authorizationElements[2] : null;
 
     System.out.println("Access token is " + accessToken);
-    System.out.println("Id token is " + idToken);
-
+    if (idToken == null) {
+      System.out.println("No id token specified");
+    } else {
+      System.out.println("Id token is " + idToken);
+    }
+    
     // // get the app id public key to verify the token
     JsonObject publicKey = null;
     try {
@@ -112,6 +110,26 @@ public class ValidateToken {
 
     // valid token detected, let it pass
     return args;
+  }
+
+  private static JwtParser makeParser(String algo, String modulus, String exponent) {
+    if (!"RSA".equals(algo)) {
+      throw new IllegalArgumentException(algo + " is not a supported algorithm");
+    }
+
+    RSAPublicKeySpec rsaKeySpec = new RSAPublicKeySpec(new BigInteger(Base64.getDecoder().decode(modulus)),
+        new BigInteger(Base64.getDecoder().decode(exponent)));
+
+    KeyFactory keyF;
+    try {
+      keyF = KeyFactory.getInstance(algo);
+      PublicKey publicKey = keyF.generatePublic(rsaKeySpec);
+      return Jwts.parser().setSigningKey(publicKey);
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalArgumentException(e);
+    } catch (InvalidKeySpecException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
 }

@@ -93,6 +93,12 @@ A mobile follow-up app using a serverless backend in Java
 
 ## Create Serverless actions.
 
+1. Build the actions
+
+   ```
+   ./android/gradlew -p actions clean jar
+   ```
+
 1. Copy template.local.env to local.env
 
 1. Get the credentials for the Cloudant, Push Notifications and App ID services from the IBM Cloud dashboard and replace placeholders in local.env with corresponding values (url, username and password). These properties will be injected into a package so that all actions can get access to the database.

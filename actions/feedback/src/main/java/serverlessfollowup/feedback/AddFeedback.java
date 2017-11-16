@@ -11,8 +11,24 @@ import com.cloudant.client.api.model.Response;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+/**
+ * Stores a feedback in the database.
+ */
 public class AddFeedback {
 
+  /**
+   * Input:
+   * <ul>
+   *   <li>_accessToken - the decoded JSON representation of the accessToken</li>
+   *   <li>message - the message to store</li>
+   * </ul>
+   * 
+   * Output:
+   * <ul>
+   *   <li>body.ok: true|false</li>
+   *   <li>body.response: details from the database</li>
+   * </ul>
+   */
   public static JsonObject main(JsonObject args) throws Exception {
     // read the tokens
     JsonObject accessToken = (JsonObject) args.get("_accessToken");

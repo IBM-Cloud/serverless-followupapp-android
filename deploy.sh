@@ -65,9 +65,9 @@ function install() {
     --main serverlessfollowup.users.AddUser \
     --annotation final true
 
-  bx wsk action create $PACKAGE_NAME/users-notify \
+  bx wsk action create $PACKAGE_NAME/users-prepare-notify \
     actions/users/build/libs/users.jar \
-    --main serverlessfollowup.users.NotifyUser \
+    --main serverlessfollowup.users.PrepareUserNotification \
     --annotation final true
 
   bx wsk action create $PACKAGE_NAME/feedback-put \
@@ -93,7 +93,7 @@ function install() {
 
   # sequence reading the document from cloudant changes then calling analyze feedback on it
   bx wsk action create $PACKAGE_NAME/feedback-analyze-sequence \
-    $PACKAGE_NAME-cloudant/read-document,$PACKAGE_NAME/feedback-analyze,$PACKAGE_NAME/users-notify,$PACKAGE_NAME-push/sendMessage \
+    $PACKAGE_NAME-cloudant/read-document,$PACKAGE_NAME/feedback-analyze,$PACKAGE_NAME/users-prepare-notify,$PACKAGE_NAME-push/sendMessage \
     --sequence
 
   echo "Creating triggers..."
@@ -115,7 +115,7 @@ function uninstall() {
   echo "Removing actions..."
   bx wsk action delete $PACKAGE_NAME/auth-validate
   bx wsk action delete $PACKAGE_NAME/users-add
-  bx wsk action delete $PACKAGE_NAME/users-notify
+  bx wsk action delete $PACKAGE_NAME/users-prepare-notify
   bx wsk action delete $PACKAGE_NAME/feedback-put
   bx wsk action delete $PACKAGE_NAME/feedback-analyze
 
@@ -138,9 +138,9 @@ function update() {
     actions/users/build/libs/users.jar \
     --main serverlessfollowup.users.AddUser
 
-  bx wsk action update $PACKAGE_NAME/users-notify \
+  bx wsk action update $PACKAGE_NAME/users-prepare-notify \
     actions/users/build/libs/users.jar \
-    --main serverlessfollowup.users.NotifyUser
+    --main serverlessfollowup.users.PrepareUserNotification
 
   bx wsk action update $PACKAGE_NAME/feedback-put \
     actions/feedback/build/libs/feedback.jar \
