@@ -20,6 +20,7 @@ public class PrepareUserNotification {
   /**
    * Input:
    * <ul>
+   *   <li>services.cloudant.url - Cloudant service url including username and password
    *   <li>subject - the user to notify</li>
    *   <li>message - the message to send</li>
    * </ul>

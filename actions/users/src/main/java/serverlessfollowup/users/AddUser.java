@@ -20,6 +20,7 @@ public class AddUser {
   /**
    * Input:
    * <ul>
+   *   <li>services.cloudant.url - Cloudant service url including username and password
    *   <li>_accessToken - the decoded JSON representation of the access token</li>
    *   <li>_idToken - the decoded JSON representation of the id token</li>
    *   <li>deviceId - the mobile device id of the user, used to send notifications back to the device
