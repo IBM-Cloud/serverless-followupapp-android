@@ -63,6 +63,11 @@ public class AnalyzeFeedback {
     }
     System.out.println("Feedback tone is " + feedbackToneScore);
     
+    if (feedbackToneScore.getScore() < 0.01) {
+      System.out.println("Score is too small to send a feedback");
+      throw new IllegalArgumentException("Score too small");
+    }
+    
     // look for a mood message for this tone
     CloudantClient client = ClientBuilder.url(new URL(args.getAsJsonPrimitive("services.cloudant.url").getAsString()))
         .build();
