@@ -12,7 +12,7 @@
       "_id": "fear",
       "template": "Dear {{name}}, we are sorry for the issue you encountered"
     },
-        {
+    {
       "_id": "joy",
       "template": "Thank you for your feedback!"
     },
