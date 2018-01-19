@@ -20,8 +20,8 @@ import okhttp3.Response;
  */
 public class ServerlessAPI {
 
-  public static final MediaType JSON
-    = MediaType.parse("application/json; charset=utf-8");
+  public static final MediaType JSON =
+    MediaType.parse("application/json; charset=utf-8");
 
   private static ServerlessAPI api;
 
