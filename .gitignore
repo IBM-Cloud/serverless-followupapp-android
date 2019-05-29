@@ -1,2 +1,4 @@
 local.env
 .gradle
+package-push-notifications
+android/.idea

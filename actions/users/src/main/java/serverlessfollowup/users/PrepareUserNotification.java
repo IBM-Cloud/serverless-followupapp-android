@@ -59,8 +59,8 @@ public class PrepareUserNotification {
     JsonObject response = new JsonObject();
     JsonArray deviceIds = new JsonArray();
     deviceIds.add((String)existingUser.get("deviceId"));
-    response.add("deviceIds", deviceIds);
-    response.addProperty("text", notificationText);
+    response.add("targetDeviceIds", deviceIds);
+    response.addProperty("messageText", notificationText);
     return response;
   }
   
