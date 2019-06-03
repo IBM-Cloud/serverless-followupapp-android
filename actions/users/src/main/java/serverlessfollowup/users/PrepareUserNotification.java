@@ -32,6 +32,7 @@ public class PrepareUserNotification {
    * </ul>
    */
   public static JsonObject main(JsonObject args) throws Exception {    
+    System.out.println("Received: " + new Gson().toJson(args));
     
     String subject = args.getAsJsonPrimitive("subject").getAsString();
     String notificationText = args.getAsJsonPrimitive("message").getAsString();

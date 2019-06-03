@@ -50,6 +50,8 @@ public class ValidateToken {
    * </ul>
    */
   public static JsonObject main(JsonObject args) throws Exception {
+    System.out.println("Received: " + new Gson().toJson(args));
+
     // we expect the Authorization header to be set
     JsonObject headers = args.getAsJsonObject("__ow_headers");
     JsonPrimitive authorization = headers.getAsJsonPrimitive("authorization");
