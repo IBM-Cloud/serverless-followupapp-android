@@ -32,11 +32,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ibm.bluemix.appid.android.api.AppID;
-import com.ibm.bluemix.appid.android.api.AppIDAuthorizationManager;
-import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
-import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
-import com.ibm.bluemix.appid.android.api.userattributes.UserAttributesException;
+import com.ibm.cloud.appid.android.api.AppID;
+import com.ibm.cloud.appid.android.api.AppIDAuthorizationManager;
+import com.ibm.cloud.appid.android.api.tokens.AccessToken;
+import com.ibm.cloud.appid.android.api.tokens.IdentityToken;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
