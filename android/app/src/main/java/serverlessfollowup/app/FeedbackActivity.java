@@ -160,15 +160,6 @@ public class FeedbackActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
-  private void handleAppIdError(UserAttributesException e) {
-    switch (e.getError()) {
-      case FAILED_TO_CONNECT:
-        throw new RuntimeException("Failed to connect to App ID to access profile attributes", e);
-      case UNAUTHORIZED:
-        throw new RuntimeException("Not authorized to access profile attributes at App ID", e);
-    }
-  }
-
   private void setProfilePhoto(final String photoUrl) {
     AsyncTask.execute(new Runnable() {
       @Override
