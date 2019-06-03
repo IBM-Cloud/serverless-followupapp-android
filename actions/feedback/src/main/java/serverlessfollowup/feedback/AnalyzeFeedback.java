@@ -6,6 +6,7 @@ import java.util.Map;
 import com.cloudant.client.api.ClientBuilder;
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ibm.watson.developer_cloud.tone_analyzer.v3.ToneAnalyzer;
 import com.ibm.watson.developer_cloud.tone_analyzer.v3.model.ToneAnalysis;
@@ -36,6 +37,8 @@ public class AnalyzeFeedback {
    * </ul>
    */
   public static JsonObject main(JsonObject args) throws Exception {
+    System.out.println("Received: " + new Gson().toJson(args));
+
     String subject = args.getAsJsonPrimitive("subject").getAsString();
     String feedbackText = args.getAsJsonPrimitive("message").getAsString();
     

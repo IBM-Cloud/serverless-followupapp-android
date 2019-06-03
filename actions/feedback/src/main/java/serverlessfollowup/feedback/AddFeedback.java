@@ -31,6 +31,8 @@ public class AddFeedback {
    * </ul>
    */
   public static JsonObject main(JsonObject args) throws Exception {
+    System.out.println("Received: " + new Gson().toJson(args));
+
     // read the tokens
     JsonObject accessToken = (JsonObject) args.get("_accessToken");
     

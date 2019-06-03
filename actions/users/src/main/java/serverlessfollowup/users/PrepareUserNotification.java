@@ -32,6 +32,7 @@ public class PrepareUserNotification {
    * </ul>
    */
   public static JsonObject main(JsonObject args) throws Exception {    
+    System.out.println("Received: " + new Gson().toJson(args));
     
     String subject = args.getAsJsonPrimitive("subject").getAsString();
     String notificationText = args.getAsJsonPrimitive("message").getAsString();
@@ -59,8 +60,8 @@ public class PrepareUserNotification {
     JsonObject response = new JsonObject();
     JsonArray deviceIds = new JsonArray();
     deviceIds.add((String)existingUser.get("deviceId"));
-    response.add("deviceIds", deviceIds);
-    response.addProperty("text", notificationText);
+    response.add("targetDeviceIds", deviceIds);
+    response.addProperty("messageText", notificationText);
     return response;
   }
   

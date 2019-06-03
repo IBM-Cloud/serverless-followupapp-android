@@ -16,9 +16,10 @@ package serverlessfollowup.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ibm.bluemix.appid.android.api.AppIDAuthorizationManager;
-import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
-import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
+import com.ibm.cloud.appid.android.api.AppIDAuthorizationManager;
+import com.ibm.cloud.appid.android.api.tokens.AccessToken;
+import com.ibm.cloud.appid.android.api.tokens.IdentityToken;
+
 
 /**
  * Handles the process of storing the Access token on the Android device and retrieving it to be used

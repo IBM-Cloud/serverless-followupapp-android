@@ -15,10 +15,11 @@ package serverlessfollowup.app;
 import android.app.Activity;
 import android.util.Log;
 
-import com.ibm.bluemix.appid.android.api.AuthorizationException;
-import com.ibm.bluemix.appid.android.api.AuthorizationListener;
-import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
-import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
+import com.ibm.cloud.appid.android.api.AuthorizationException;
+import com.ibm.cloud.appid.android.api.AuthorizationListener;
+import com.ibm.cloud.appid.android.api.tokens.AccessToken;
+import com.ibm.cloud.appid.android.api.tokens.IdentityToken;
+import com.ibm.cloud.appid.android.api.tokens.RefreshToken;
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushException;
@@ -31,6 +32,8 @@ import org.json.JSONObject;
  * with the push notifications service and with the backend API.
  */
 public class LoginAndRegistrationListener implements AuthorizationListener {
+
+  private final static String region = BMSClient.REGION_US_SOUTH;
 
   private TokensPersistenceManager tokensPersistenceManager;
   private Activity activity;
@@ -53,14 +56,14 @@ public class LoginAndRegistrationListener implements AuthorizationListener {
   }
 
   @Override
-  public final void onAuthorizationSuccess(final AccessToken accessToken, final IdentityToken identityToken) {
+  public void onAuthorizationSuccess(final AccessToken accessToken, final IdentityToken identityToken, RefreshToken refreshToken) {
     Log.i(logTag("onAuthorizationCanceled"), "Authorization succeeded");
 
     // keep track of the new tokens
     tokensPersistenceManager.persistTokensOnDevice();
 
     // initialize the Mobile SDK
-    BMSClient.getInstance().initialize(activity, BMSClient.REGION_US_SOUTH);
+    BMSClient.getInstance().initialize(activity, region);
 
     // initialize the client Push Notifications SDK
     final MFPPush push = MFPPush.getInstance();

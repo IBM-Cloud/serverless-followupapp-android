@@ -3,8 +3,8 @@ package serverlessfollowup.app;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.ibm.bluemix.appid.android.api.tokens.AccessToken;
-import com.ibm.bluemix.appid.android.api.tokens.IdentityToken;
+import com.ibm.cloud.appid.android.api.tokens.AccessToken;
+import com.ibm.cloud.appid.android.api.tokens.IdentityToken;
 
 import java.util.HashMap;
 import java.util.Map;

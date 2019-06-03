@@ -19,9 +19,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.ibm.bluemix.appid.android.api.AppID;
-import com.ibm.bluemix.appid.android.api.AppIDAuthorizationManager;
-import com.ibm.bluemix.appid.android.api.LoginWidget;
+import com.ibm.cloud.appid.android.api.AppID;
+import com.ibm.cloud.appid.android.api.AppIDAuthorizationManager;
+import com.ibm.cloud.appid.android.api.LoginWidget;
 import com.vlonjatg.progressactivity.ProgressRelativeLayout;
 
 /**
@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onRegistrationSuccess();
 
         // move to the feedback screen
+        Log.d(logTag("onRegistrationSuccess"), "Opening Feedback view...");
         Intent intent = new Intent(LoginActivity.this, FeedbackActivity.class);
         LoginActivity.this.startActivity(intent);
         LoginActivity.this.finish();
@@ -105,8 +106,7 @@ public class LoginActivity extends AppCompatActivity {
     progressActivity.showLoading();
 
     Log.d(logTag("onAnonymousClick"), "Attempting anonymous authorization");
-    final String storedAccessToken = tokensPersistenceManager.getStoredAnonymousAccessToken();
-    appId.loginAnonymously(getApplicationContext(), storedAccessToken, registrationListener);
+    appId.signinAnonymously(getApplicationContext(), registrationListener);
   }
 
   /**
@@ -117,8 +117,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Log.d(logTag("onLoginClick"), "Attempting identified authorization");
     LoginWidget loginWidget = appId.getLoginWidget();
-    final String storedAccessToken = tokensPersistenceManager.getStoredAccessToken();
-    loginWidget.launch(this, registrationListener, storedAccessToken);
+    loginWidget.launch(this, registrationListener);
   }
 
   private String logTag(String methodName) {
