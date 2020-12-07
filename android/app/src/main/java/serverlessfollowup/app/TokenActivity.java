@@ -14,8 +14,9 @@
 package serverlessfollowup.app;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Show the textual presentation of the Access and Identity tokens that are currently being used on this app
